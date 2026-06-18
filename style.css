@@ -1,0 +1,370 @@
+/* ==========================================================================
+   Project e — Design System
+   Built around the golden-ratio spiral in the logo: the squares grow,
+   one at a time, the way the program is meant to grow.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+:root {
+  /* Color — pulled directly from the logo */
+  --forest: #004225;
+  --sage: #5E9E6E;
+  --moss: #3E7E58;
+  --mint: #7BBF8C;
+  --mint-pale: #E2F2E6;
+  --paper: #F6FAF7;
+  --ink: #0E1A14;
+  --white: #FFFFFF;
+
+  /* Type — Space Mono echoes the logo's <learn continuously> tagline */
+  --font-display: 'Space Mono', 'Courier New', monospace;
+  --font-body: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --max-width: 1180px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --radius: 10px;
+
+  /* Golden-ratio rhythm: used for split layouts (61.8 / 38.2) */
+  --phi-major: 61.8%;
+  --phi-minor: 38.2%;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.12;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); }
+h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); }
+p { margin: 0 0 1em; max-width: 62ch; }
+
+em { font-style: italic; color: var(--moss); }
+
+/* Eyebrow / tag label — echoes the "<learn continuously>" tagline */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--moss);
+  margin-bottom: 0.9em;
+}
+.eyebrow::before { content: '<'; }
+.eyebrow::after { content: '>'; }
+
+/* Visible keyboard focus everywhere */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--moss);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Layout helpers ---------- */
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.section { padding: clamp(3rem, 7vw, 6rem) 0; }
+.section--tint { background: var(--mint-pale); }
+.section--dark { background: var(--forest); color: var(--paper); }
+.section--dark .eyebrow { color: var(--mint); }
+.section--dark h2 { color: var(--white); }
+
+.split {
+  display: grid;
+  grid-template-columns: var(--phi-major) var(--phi-minor);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+.split--reverse { grid-template-columns: var(--phi-minor) var(--phi-major); }
+.split--reverse > :first-child { order: 2; }
+@media (max-width: 800px) {
+  .split, .split--reverse { grid-template-columns: 1fr; }
+  .split--reverse > :first-child { order: 0; }
+}
+
+.grid {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 800px) {
+  .grid--3, .grid--2 { grid-template-columns: 1fr; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.85em 1.6em;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-primary { background: var(--forest); color: var(--white); }
+.btn-primary:hover { background: var(--moss); }
+.btn-ghost { background: transparent; color: var(--forest); border-color: var(--forest); }
+.btn-ghost:hover { background: var(--forest); color: var(--white); }
+.section--dark .btn-ghost { color: var(--paper); border-color: var(--mint); }
+.section--dark .btn-ghost:hover { background: var(--mint); color: var(--forest); }
+.section--dark .btn-primary { background: var(--mint); color: var(--forest); }
+.section--dark .btn-primary:hover { background: var(--paper); }
+.btn-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.6rem; }
+
+.center { text-align: center; }
+.center p { margin-left: auto; margin-right: auto; }
+.center .btn-row { justify-content: center; }
+.center .eyebrow { justify-content: center; }
+
+/* ---------- Nav ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(246, 250, 247, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0, 66, 37, 0.1);
+}
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem var(--gutter);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--forest);
+}
+.nav-brand img { height: 34px; width: auto; }
+.nav-brand em { color: inherit; font-style: italic; }
+
+.nav-links {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 2.2rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 0.96rem;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--ink);
+  padding: 0.4em 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.nav-links a:hover, .nav-links a[aria-current="page"] {
+  color: var(--forest);
+  border-color: var(--moss);
+}
+.nav-cta {
+  background: var(--forest);
+  color: var(--white) !important;
+  padding: 0.55em 1.2em;
+  border-radius: 999px;
+  border-bottom: none !important;
+}
+.nav-cta:hover { background: var(--moss); }
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+}
+.nav-toggle svg { width: 26px; height: 26px; }
+
+@media (max-width: 760px) {
+  .nav-toggle { display: block; }
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--paper);
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem var(--gutter) 1rem;
+    border-bottom: 1px solid rgba(0,66,37,0.1);
+    display: none;
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links li { width: 100%; }
+  .nav-links a { display: block; padding: 0.7em 0; }
+  .nav-cta { display: inline-block; margin-top: 0.4em; }
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--white);
+  border: 1px solid rgba(0,66,37,0.12);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+}
+.card h3 { margin-bottom: 0.5rem; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ---------- Spiral roadmap squares (programs page) ---------- */
+.roadmap-square {
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.1rem;
+  min-height: 140px;
+}
+.roadmap-square.is-active {
+  background: var(--forest);
+  color: var(--white);
+}
+.roadmap-square.is-future {
+  background: transparent;
+  border: 2px dashed rgba(0,66,37,0.35);
+  color: var(--moss);
+}
+.roadmap-square .status {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  opacity: 0.85;
+  margin-bottom: 0.3em;
+}
+.roadmap-square h3 { margin: 0; font-size: 1.05rem; }
+.roadmap-square p { font-size: 0.85rem; margin: 0.5em 0 0; opacity: 0.85; max-width: none; }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  background: var(--forest);
+  color: var(--mint-pale);
+  padding: 3rem 0 2rem;
+  font-size: 0.95rem;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 700px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+.site-footer h4 {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--mint);
+  text-transform: lowercase;
+  margin-bottom: 0.8em;
+}
+.site-footer a { color: var(--paper); text-decoration: none; }
+.site-footer a:hover { color: var(--mint); }
+.site-footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5em; }
+.footer-bottom {
+  border-top: 1px solid rgba(246,250,247,0.15);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: rgba(246,250,247,0.65);
+}
+
+/* ---------- Spiral hero graphic + load animation ---------- */
+.spiral-wrap { width: 100%; }
+.spiral-svg rect, .spiral-svg path { opacity: 0; }
+.spiral-svg.is-revealed rect, .spiral-svg.is-revealed path { opacity: 1; }
+.spiral-svg rect {
+  transform-origin: center;
+  animation: spiral-pop 0.55s cubic-bezier(.2,.9,.3,1.3) forwards;
+}
+.spiral-svg path { animation: spiral-fade 0.6s ease forwards; animation-delay: 1.1s; }
+@keyframes spiral-pop {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes spiral-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spiral-svg rect, .spiral-svg path { opacity: 1 !important; animation: none !important; transform: none !important; }
+}
+
+/* ---------- Misc ---------- */
+.stat {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--moss);
+  border-left: 3px solid var(--mint);
+  padding-left: 1rem;
+}
+.quote {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--forest);
+  line-height: 1.4;
+}
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--forest);
+  color: var(--white);
+  padding: 0.8em 1.2em;
+  z-index: 100;
+}
+.skip-link:focus { left: 1rem; top: 1rem; }
