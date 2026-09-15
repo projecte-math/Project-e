@@ -597,10 +597,10 @@ function renderUnits(units, containerId) {
     }
     bodyHTML += `<div class="unit-links">`;
     if (unit.homework) {
-      bodyHTML += `<a href="${unit.homework}" class="btn btn-ghost">Homework</a>`;
+      bodyHTML += `<a href="${unit.homework}" target="_blank" rel="noopener" class="btn btn-ghost">Homework</a>`;
     }
     if (unit.answers) {
-      bodyHTML += `<a href="${unit.answers}" class="btn btn-ghost">Answer key</a>`;
+      bodyHTML += `<a href="${unit.answers}" target="_blank" rel="noopener" class="btn btn-ghost">Answer key</a>`;
     }
     bodyHTML += `</div>`;
     body.innerHTML = bodyHTML;
